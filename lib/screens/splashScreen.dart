@@ -11,8 +11,10 @@ import 'package:tmt_mobile/models/userdata.dart';
 import 'package:tmt_mobile/screens/MenuScreen.dart';
 import 'package:tmt_mobile/screens/MyOrganisationScreen.dart';
 import 'package:tmt_mobile/screens/landingScreen.dart';
+import 'package:tmt_mobile/utils/myColors.dart';
 import 'package:tmt_mobile/utils/userServices.dart';
 import 'package:tmt_mobile/utils/utils.dart';
+import 'package:tmt_mobile/widgets/big_text.dart';
 import 'package:video_player/video_player.dart';
 
 import 'HomePage.dart';
@@ -60,6 +62,25 @@ class _SplashPageState extends State<SplashPage> {
 
         Get.offAll(MenuScreen());
       } else {
+        Get.snackbar(
+          '',
+          '',
+          titleText: BigText(
+            text: "Oops! It seems like you've lost connection to the server",
+            size: 18,
+            color: Colors.green,
+          ),
+          messageText: Text(
+            "consider logging in again to re-establish your connection.",
+            style: TextStyle(
+              fontSize: 17,
+            ),
+          ),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: MyColors.BordersGrey.withOpacity(0.4),
+          duration: const Duration(seconds: 1),
+          overlayBlur: 0.7,
+        );
         Get.offAll(LandingScreen());
       }
     });

@@ -88,62 +88,65 @@ class SideMenu extends GetView<SideMenuController> {
             flex: 4,
             child: ListView(
               children: [
-                ListTile(
-                  onTap: () {
-                    if (UserPrefrences.getCureentOrg() != "" &&
-                        UserPrefrences.getCureentOrg() != null) {
-                      mController.screenindex.value = 0;
-                    } else {
-                      Get.snackbar(
-                        '',
-                        '',
-                        titleText: BigText(
-                          text: global.lang.value == "fr"
-                              ? "Non Autorisé"
-                              : "UNAUTHORIZED",
-                          size: 18,
-                          color: MyColors.blackbackground2,
-                        ),
-                        messageText: Text(
-                          global.lang.value == "fr"
-                              ? "Vous devez d'abord choisir une organisation"
-                              : "You need to choose an organisation first",
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
-                        ),
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: MyColors.BordersGrey.withOpacity(0.4),
-                        overlayBlur: 1.5,
-                      );
-                    }
-                  },
-                  leading: Icon(Icons.view_timeline_rounded),
-                  title: Text(
-                      global.lang == "fr" ? "Saisie de temps" : 'Timesheet'),
-                ),
-                ListTile(
-                  onTap: () {
-                    mController.screenindex.value = 1;
-                  },
-                  leading: Icon(Icons.workspaces_rounded),
-                  title: Text(global.lang == "fr"
-                      ? "Mes Organisations"
-                      : 'My Organisations'),
-                ),
-                ListTile(
-                  onTap: () async {
-                    final storage = new FlutterSecureStorage();
-                    await storage.delete(key: "jwt");
-                    await UserPrefrences.deleteAll();
+                Obx(() => ListTile(
+                      onTap: () {
+                        if (UserPrefrences.getCureentOrg() != "" &&
+                            UserPrefrences.getCureentOrg() != null) {
+                          mController.screenindex.value = 0;
+                        } else {
+                          Get.snackbar(
+                            '',
+                            '',
+                            titleText: BigText(
+                              text: global.lang.value == "fr"
+                                  ? "Non Autorisé"
+                                  : "UNAUTHORIZED",
+                              size: 18,
+                              color: MyColors.blackbackground2,
+                            ),
+                            messageText: Text(
+                              global.lang.value == "fr"
+                                  ? "Vous devez d'abord choisir une organisation"
+                                  : "You need to choose an organisation first",
+                              style: TextStyle(
+                                fontSize: 17,
+                              ),
+                            ),
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor:
+                                MyColors.BordersGrey.withOpacity(0.4),
+                            overlayBlur: 1.5,
+                          );
+                        }
+                      },
+                      leading: Icon(Icons.view_timeline_rounded),
+                      title: Text(global.lang == "fr"
+                          ? "Saisie de temps"
+                          : 'Timesheet'),
+                    )),
+                Obx(() => ListTile(
+                      onTap: () {
+                        mController.screenindex.value = 1;
+                      },
+                      leading: Icon(Icons.workspaces_rounded),
+                      title: Text(global.lang == "fr"
+                          ? "Mes Organisations"
+                          : 'My Organisations'),
+                    )),
+                Obx(() => ListTile(
+                      onTap: () async {
+                        final storage = new FlutterSecureStorage();
+                        await storage.delete(key: "jwt");
+                        await UserPrefrences.deleteAll();
 
-                    await Get.deleteAll();
-                    Get.lazyPut(() => GlobalController());
-                    Get.offAll(LandingScreen());
-                  },
-                  leading: Icon(Icons.logout),
-                  title: Text(global.lang == "fr" ? 'Déconnecter' : 'Log out'),
-                ),
+                        await Get.deleteAll();
+                        Get.lazyPut(() => GlobalController());
+                        Get.offAll(LandingScreen());
+                      },
+                      leading: Icon(Icons.logout),
+                      title:
+                          Text(global.lang == "fr" ? 'Déconnecter' : 'Log out'),
+                    )),
               ],
             ),
           ),

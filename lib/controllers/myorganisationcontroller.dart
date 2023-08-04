@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
@@ -7,8 +8,10 @@ import 'package:tmt_mobile/controllers/globalcontroller.dart';
 import 'package:tmt_mobile/controllers/homepagecontroller.dart';
 import 'package:tmt_mobile/models/userdata.dart';
 import 'package:tmt_mobile/screens/landingScreen.dart';
+import 'package:tmt_mobile/utils/myColors.dart';
 import 'package:tmt_mobile/utils/userPrefrences.dart';
 import 'package:tmt_mobile/utils/userServices.dart';
+import 'package:tmt_mobile/widgets/big_text.dart';
 
 class MyOrganisationController extends GetxController {
   final GlobalController global;
@@ -75,7 +78,32 @@ class MyOrganisationController extends GetxController {
 
   @override
   void onInit() async {
-    await getUserOrg();
+    var connected = await context.connected();
+
+    if (connected == 2) {
+      await getUserOrg();
+    } else if (connected == 0) {
+      Get.snackbar(
+        '',
+        '',
+        titleText: BigText(
+          text: "Oops! It seems like you've lost connection to the server",
+          size: 18,
+          color: Colors.green,
+        ),
+        messageText: Text(
+          "consider logging in again to re-establish your connection.",
+          style: TextStyle(
+            fontSize: 17,
+          ),
+        ),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: MyColors.BordersGrey.withOpacity(0.4),
+        duration: const Duration(seconds: 1),
+        overlayBlur: 0.7,
+      );
+      Get.offAll(LandingScreen());
+    }
     super.onInit();
   }
 }

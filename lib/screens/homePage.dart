@@ -454,9 +454,10 @@ class HomePage extends StatelessWidget {
                               padding: const EdgeInsets.all(4.0),
                               child: SizedBox(
                                   height: screenHeight * 0.7,
-                                  child:
-                                      Obx(() =>
-                                          homeController.listviewload == false
+                                  child: Obx(() =>
+                                      homeController.listviewload == false
+                                          ? homeController
+                                                  .imputationlist.isNotEmpty
                                               ? ListView.builder(
                                                   padding: EdgeInsets.only(
                                                       bottom: 15, top: 10),
@@ -660,27 +661,43 @@ class HomePage extends StatelessWidget {
                                                       ),
                                                     );
                                                   })
-                                              : Container(
-                                                  child: Center(
-                                                      child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      "Loading...",
+                                              : Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(30),
+                                                  child: Text(
+                                                      textAlign:
+                                                          TextAlign.center,
                                                       style: TextStyle(
-                                                          fontSize: 20,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                           fontFamily:
                                                               "aileron"),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 25,
-                                                    ),
-                                                    CircularProgressIndicator(
-                                                        color: MyColors
-                                                            .thirdColor),
-                                                  ],
-                                                ))))),
+                                                      globalController
+                                                                  .lang.value ==
+                                                              "fr"
+                                                          ? "Il semblerait qu'il n'y ait pas de feuilles de temps disponibles pour cette journée."
+                                                          : "It looks like there are no timesheets available for this day."),
+                                                )
+                                          : Container(
+                                              child: Center(
+                                                  child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "Loading...",
+                                                  style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontFamily: "aileron"),
+                                                ),
+                                                SizedBox(
+                                                  height: 25,
+                                                ),
+                                                CircularProgressIndicator(
+                                                    color: MyColors.thirdColor),
+                                              ],
+                                            ))))),
                             ),
                           ),
                         ],
@@ -1056,249 +1073,275 @@ class HomePage extends StatelessWidget {
                                   ? screenHeight * 0.5
                                   : screenHeight * 0.7,
                               child: homeController.listviewload == false
-                                  ? ListView.builder(
-                                      itemCount:
-                                          homeController.imputationlist.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return Dismissible(
-                                          key: Key(homeController
-                                              .imputationlist[index].id
-                                              .toString()),
-                                          direction:
-                                              DismissDirection.startToEnd,
-                                          onDismissed: (direction) async {
-                                            await homeController
-                                                .deleteTimesheet(homeController
-                                                    .imputationlist[index].id!);
-                                            await homeController.getTimesheets(
-                                                DateTime.parse(homeController
-                                                    .birthdate.value.text));
-                                            homeController.imputationlist
-                                                .refresh();
-                                            Get.snackbar(
-                                              '',
-                                              '',
-                                              titleText: BigText(
-                                                text: globalController.lang ==
-                                                        "fr"
-                                                    ? "Succées"
-                                                    : "Success",
-                                                size: 18,
-                                                color: Colors.green,
-                                              ),
-                                              messageText: Text(
-                                                globalController.lang.value ==
-                                                        "fr"
-                                                    ? "Feuille de temps supprimée avec succès!"
-                                                    : "Timesheet Removed Successfully!",
-                                                style: TextStyle(
-                                                  fontSize: 17,
-                                                ),
-                                              ),
-                                              snackPosition:
-                                                  SnackPosition.BOTTOM,
-                                              backgroundColor: MyColors
-                                                  .BordersGrey.withOpacity(0.4),
-                                              overlayBlur: 1.5,
-                                            );
-                                          },
-                                          background: Container(
-                                            width: 20,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Icon(
-                                                  Icons.double_arrow,
-                                                  size: 30,
-                                                  color: MyColors.MainRedSecond,
-                                                ),
-                                                Text(
-                                                  globalController.lang.value ==
-                                                          "fr"
-                                                      ? "Glisser pour Supprimer"
-                                                      : "Drag to Delete",
-                                                  style:
-                                                      TextStyle(fontSize: 15),
-                                                ),
-                                                Icon(
-                                                  Icons.double_arrow,
-                                                  size: 30,
-                                                  color: MyColors.MainRedSecond,
-                                                ),
-                                              ],
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          child: Card(
-                                            child: Container(
-                                                height: screenHeight * 0.1,
-                                                child: ListTile(
-                                                  title: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        RichText(
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            text: TextSpan(
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize: 12,
-                                                                ),
-                                                                children: [
-                                                                  TextSpan(
-                                                                    text: globalController.lang ==
-                                                                            "fr"
-                                                                        ? "Projet  : "
-                                                                        : "Project : ",
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            "aileron",
-                                                                        fontSize:
-                                                                            14,
-                                                                        color: MyColors
-                                                                            .blackbackground2),
-                                                                  ),
-                                                                  TextSpan(
-                                                                      text: homeController
-                                                                          .imputationlist[
-                                                                              index]
-                                                                          .projet,
-                                                                      style: TextStyle(
-                                                                          fontFamily:
-                                                                              "aileron",
-                                                                          fontSize:
-                                                                              14,
-                                                                          color: MyColors
-                                                                              .blackbackground2,
-                                                                          fontWeight:
-                                                                              FontWeight.bold)),
-                                                                ])),
-                                                        SizedBox(
-                                                          height: screenHeight *
-                                                              0.002,
-                                                        ),
-                                                        RichText(
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            text: TextSpan(
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize: 14,
-                                                                ),
-                                                                children: [
-                                                                  TextSpan(
-                                                                    text: globalController.lang ==
-                                                                            "fr"
-                                                                        ? "Phase/lot : "
-                                                                        : "Phase  : ",
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            "aileron",
-                                                                        fontSize:
-                                                                            14,
-                                                                        color: MyColors
-                                                                            .blackbackground2),
-                                                                  ),
-                                                                  TextSpan(
-                                                                      text: homeController
-                                                                          .imputationlist[
-                                                                              index]
-                                                                          .phase,
-                                                                      style: TextStyle(
-                                                                          fontFamily:
-                                                                              "aileron",
-                                                                          fontSize:
-                                                                              14,
-                                                                          color: MyColors
-                                                                              .blackbackground2,
-                                                                          fontWeight:
-                                                                              FontWeight.bold)),
-                                                                ])),
-                                                        SizedBox(
-                                                          height: screenHeight *
-                                                              0.002,
-                                                        ),
-                                                        RichText(
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            text: TextSpan(
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize: 14,
-                                                                ),
-                                                                children: [
-                                                                  TextSpan(
-                                                                    text: globalController.lang ==
-                                                                            "fr"
-                                                                        ? "Tache  : "
-                                                                        : "Task : ",
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            "aileron",
-                                                                        fontSize:
-                                                                            14,
-                                                                        color: MyColors
-                                                                            .blackbackground2),
-                                                                  ),
-                                                                  TextSpan(
-                                                                      text: homeController
-                                                                          .imputationlist[
-                                                                              index]
-                                                                          .tache,
-                                                                      style: TextStyle(
-                                                                          fontFamily:
-                                                                              "aileron",
-                                                                          fontSize:
-                                                                              14,
-                                                                          color: MyColors
-                                                                              .blackbackground2,
-                                                                          fontWeight:
-                                                                              FontWeight.bold)),
-                                                                ])),
-                                                      ]),
-                                                  leading: Icon(
-                                                    Icons.document_scanner,
-                                                    size: 25,
-                                                    color: MyColors.thirdColor,
+                                  ? homeController.imputationlist.isNotEmpty
+                                      ? ListView.builder(
+                                          itemCount: homeController
+                                              .imputationlist.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return Dismissible(
+                                              key: Key(homeController
+                                                  .imputationlist[index].id
+                                                  .toString()),
+                                              direction:
+                                                  DismissDirection.startToEnd,
+                                              onDismissed: (direction) async {
+                                                await homeController
+                                                    .deleteTimesheet(
+                                                        homeController
+                                                            .imputationlist[
+                                                                index]
+                                                            .id!);
+                                                await homeController
+                                                    .getTimesheets(
+                                                        DateTime.parse(
+                                                            homeController
+                                                                .birthdate
+                                                                .value
+                                                                .text));
+                                                homeController.imputationlist
+                                                    .refresh();
+                                                Get.snackbar(
+                                                  '',
+                                                  '',
+                                                  titleText: BigText(
+                                                    text:
+                                                        globalController.lang ==
+                                                                "fr"
+                                                            ? "Succées"
+                                                            : "Success",
+                                                    size: 18,
+                                                    color: Colors.green,
                                                   ),
-                                                  trailing: SizedBox(
-                                                    width: screenWidth * 0.178,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: [
-                                                        Text(
-                                                          homeController
-                                                              .imputationlist[
-                                                                  index]
-                                                              .hours
-                                                              .toString(),
-                                                          style: TextStyle(
-                                                              fontSize: 15,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ],
+                                                  messageText: Text(
+                                                    globalController
+                                                                .lang.value ==
+                                                            "fr"
+                                                        ? "Feuille de temps supprimée avec succès!"
+                                                        : "Timesheet Removed Successfully!",
+                                                    style: TextStyle(
+                                                      fontSize: 17,
                                                     ),
                                                   ),
-                                                )),
-                                          ),
-                                        );
-                                      })
+                                                  snackPosition:
+                                                      SnackPosition.BOTTOM,
+                                                  backgroundColor:
+                                                      MyColors.BordersGrey
+                                                          .withOpacity(0.4),
+                                                  overlayBlur: 1.5,
+                                                );
+                                              },
+                                              background: Container(
+                                                width: 20,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.double_arrow,
+                                                      size: 30,
+                                                      color: MyColors
+                                                          .MainRedSecond,
+                                                    ),
+                                                    Text(
+                                                      globalController
+                                                                  .lang.value ==
+                                                              "fr"
+                                                          ? "Glisser pour Supprimer"
+                                                          : "Drag to Delete",
+                                                      style: TextStyle(
+                                                          fontSize: 15),
+                                                    ),
+                                                    Icon(
+                                                      Icons.double_arrow,
+                                                      size: 30,
+                                                      color: MyColors
+                                                          .MainRedSecond,
+                                                    ),
+                                                  ],
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              child: Card(
+                                                child: Container(
+                                                    height: screenHeight * 0.1,
+                                                    child: ListTile(
+                                                      title: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            RichText(
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                text: TextSpan(
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                          12,
+                                                                    ),
+                                                                    children: [
+                                                                      TextSpan(
+                                                                        text: globalController.lang ==
+                                                                                "fr"
+                                                                            ? "Projet  : "
+                                                                            : "Project : ",
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                "aileron",
+                                                                            fontSize:
+                                                                                14,
+                                                                            color:
+                                                                                MyColors.blackbackground2),
+                                                                      ),
+                                                                      TextSpan(
+                                                                          text: homeController
+                                                                              .imputationlist[
+                                                                                  index]
+                                                                              .projet,
+                                                                          style: TextStyle(
+                                                                              fontFamily: "aileron",
+                                                                              fontSize: 14,
+                                                                              color: MyColors.blackbackground2,
+                                                                              fontWeight: FontWeight.bold)),
+                                                                    ])),
+                                                            SizedBox(
+                                                              height:
+                                                                  screenHeight *
+                                                                      0.002,
+                                                            ),
+                                                            RichText(
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                text: TextSpan(
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                          14,
+                                                                    ),
+                                                                    children: [
+                                                                      TextSpan(
+                                                                        text: globalController.lang ==
+                                                                                "fr"
+                                                                            ? "Phase/lot : "
+                                                                            : "Phase  : ",
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                "aileron",
+                                                                            fontSize:
+                                                                                14,
+                                                                            color:
+                                                                                MyColors.blackbackground2),
+                                                                      ),
+                                                                      TextSpan(
+                                                                          text: homeController
+                                                                              .imputationlist[
+                                                                                  index]
+                                                                              .phase,
+                                                                          style: TextStyle(
+                                                                              fontFamily: "aileron",
+                                                                              fontSize: 14,
+                                                                              color: MyColors.blackbackground2,
+                                                                              fontWeight: FontWeight.bold)),
+                                                                    ])),
+                                                            SizedBox(
+                                                              height:
+                                                                  screenHeight *
+                                                                      0.002,
+                                                            ),
+                                                            RichText(
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                text: TextSpan(
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                          14,
+                                                                    ),
+                                                                    children: [
+                                                                      TextSpan(
+                                                                        text: globalController.lang ==
+                                                                                "fr"
+                                                                            ? "Tache  : "
+                                                                            : "Task : ",
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                "aileron",
+                                                                            fontSize:
+                                                                                14,
+                                                                            color:
+                                                                                MyColors.blackbackground2),
+                                                                      ),
+                                                                      TextSpan(
+                                                                          text: homeController
+                                                                              .imputationlist[
+                                                                                  index]
+                                                                              .tache,
+                                                                          style: TextStyle(
+                                                                              fontFamily: "aileron",
+                                                                              fontSize: 14,
+                                                                              color: MyColors.blackbackground2,
+                                                                              fontWeight: FontWeight.bold)),
+                                                                    ])),
+                                                          ]),
+                                                      leading: Icon(
+                                                        Icons.document_scanner,
+                                                        size: 25,
+                                                        color:
+                                                            MyColors.thirdColor,
+                                                      ),
+                                                      trailing: SizedBox(
+                                                        width:
+                                                            screenWidth * 0.178,
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceAround,
+                                                          children: [
+                                                            Text(
+                                                              homeController
+                                                                  .imputationlist[
+                                                                      index]
+                                                                  .hours
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  fontSize: 15,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )),
+                                              ),
+                                            );
+                                          })
+                                      : Padding(
+                                          padding: const EdgeInsets.all(30),
+                                          child: Text(
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: "aileron"),
+                                              globalController.lang.value ==
+                                                      "fr"
+                                                  ? "Il semblerait qu'il n'y ait pas de feuilles de temps disponibles pour cette journée."
+                                                  : "It looks like there are no timesheets available for this day."),
+                                        )
                                   : Container(
                                       child: Padding(
                                       padding: const EdgeInsets.all(20.0),

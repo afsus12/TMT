@@ -51,7 +51,7 @@ class SignInScreen extends GetView<SignInController> {
 
     return Scaffold(
         resizeToAvoidBottomInset:
-            globalController.devType.value == "tablet" ? false : true,
+            globalController.devType.value == "tablet" ? true : false,
         backgroundColor: Color(0xffffffff),
         body: globalController.devType.value == "tablet"
             ? SafeArea(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tmt_mobile/controllers/signincontroller.dart';
@@ -9,7 +10,9 @@ import 'package:tmt_mobile/models/project.dart';
 import 'package:tmt_mobile/models/projectLot.dart';
 import 'package:tmt_mobile/models/projetTasks.dart';
 import 'package:tmt_mobile/screens/landingScreen.dart';
+import 'package:tmt_mobile/utils/myColors.dart';
 import 'package:tmt_mobile/utils/userServices.dart';
+import 'package:tmt_mobile/widgets/big_text.dart';
 
 class HomePageController extends GetxController {
   var hidden = true.obs;
@@ -238,8 +241,33 @@ class HomePageController extends GetxController {
     quantiteController.value.text = 0.toString();
     birthdate.value.text = DateFormat("yyyy-MM-dd").format(DateTime.now());
     DateTime dt1 = DateTime.parse(birthdate.value.text);
-    await getTimesheets(a);
-    await getProjects();
+    var connected = await context.connected();
+    if (connected == 1) {
+      await getTimesheets(a);
+      await getProjects();
+    } else if (connected == 0) {
+      Get.snackbar(
+        '',
+        '',
+        titleText: BigText(
+          text: "Oops! It seems like you've lost connection to the server",
+          size: 18,
+          color: Colors.green,
+        ),
+        messageText: Text(
+          "consider logging in again to re-establish your connection.",
+          style: TextStyle(
+            fontSize: 17,
+          ),
+        ),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: MyColors.BordersGrey.withOpacity(0.4),
+        duration: const Duration(seconds: 1),
+        overlayBlur: 0.7,
+      );
+
+      Get.offAll(LandingScreen());
+    }
 
     super.onInit();
   }
