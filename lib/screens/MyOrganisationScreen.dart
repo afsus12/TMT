@@ -16,58 +16,66 @@ class MyOrganisationScreen extends StatelessWidget {
     Get.put(MyOrganisationController(global));
     MyOrganisationController controller = Get.find<MyOrganisationController>();
     return global.devType.value == "tablet"
-        ? Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Obx(() => controller.orglist.isNotEmpty
-                ? GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 7),
-                    itemBuilder: (context, index) => Obx(
-                      () => OrgContainer(
-                          name: controller.orglist[index].name.toString(),
-                          clicked: index == controller.selectedOrgIndex.value,
-                          clickme: () async {
-                            var name =
-                                controller.orglist[index].guid.toString();
-                            await controller.selectedOrg(name, index);
-                          }),
-                    ),
-                    itemCount: controller.orglist.length,
-                  )
-                : Center(
-                    child: Text(
-                      global.lang == "fr"
-                          ? "Vous n’appartenez à aucune organisation, veuillez contacter votre organisation"
-                          : "You dont belong to any organistation please contact your organisation",
-                      style: TextStyle(color: Colors.black, fontSize: 25),
-                    ),
-                  )),
-          )
-        : Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Obx(() => controller.orglist.isNotEmpty
-                ? GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3),
-                    itemBuilder: (context, index) => Obx(
-                      () => OrgContainer(
-                          name: controller.orglist[index].name.toString(),
-                          clicked: index == controller.selectedOrgIndex.value,
-                          clickme: () async {
-                            var name =
-                                controller.orglist[index].guid.toString();
-                            await controller.selectedOrg(name, index);
-                          }),
-                    ),
-                    itemCount: controller.orglist.length,
-                  )
-                : SizedBox(
-                    child: Text(
-                      global.lang == "fr"
-                          ? "Vous n’appartenez à aucune organisation, veuillez contacter votre organisation"
-                          : "You dont belong to any organistation please contact your organisation",
-                    ),
-                  )),
-          );
+        ? organisationScreenTablet(controller, global)
+        : organisationScreenAndroid(controller, global);
+  }
+
+  Padding organisationScreenAndroid(
+      MyOrganisationController controller, GlobalController global) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Obx(() => controller.orglist.isNotEmpty
+          ? GridView.builder(
+              gridDelegate:
+                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+              itemBuilder: (context, index) => Obx(
+                () => OrgContainer(
+                    name: controller.orglist[index].name.toString(),
+                    clicked: index == controller.selectedOrgIndex.value,
+                    clickme: () async {
+                      var name = controller.orglist[index].guid.toString();
+                      await controller.selectedOrg(name, index);
+                    }),
+              ),
+              itemCount: controller.orglist.length,
+            )
+          : SizedBox(
+              child: Text(
+                global.lang == "fr"
+                    ? "Vous n’appartenez à aucune organisation, veuillez contacter votre organisation"
+                    : "You dont belong to any organistation please contact your organisation",
+              ),
+            )),
+    );
+  }
+
+  Padding organisationScreenTablet(
+      MyOrganisationController controller, GlobalController global) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Obx(() => controller.orglist.isNotEmpty
+          ? GridView.builder(
+              gridDelegate:
+                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7),
+              itemBuilder: (context, index) => Obx(
+                () => OrgContainer(
+                    name: controller.orglist[index].name.toString(),
+                    clicked: index == controller.selectedOrgIndex.value,
+                    clickme: () async {
+                      var name = controller.orglist[index].guid.toString();
+                      await controller.selectedOrg(name, index);
+                    }),
+              ),
+              itemCount: controller.orglist.length,
+            )
+          : Center(
+              child: Text(
+                global.lang == "fr"
+                    ? "Vous n’appartenez à aucune organisation, veuillez contacter votre organisation"
+                    : "You dont belong to any organistation please contact your organisation",
+                style: TextStyle(color: Colors.black, fontSize: 25),
+              ),
+            )),
+    );
   }
 }

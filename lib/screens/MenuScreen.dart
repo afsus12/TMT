@@ -142,7 +142,7 @@ class MenuScreen extends GetView<Menucontroller> {
     );
   }
 }
-
+/* 
 class BNBCustonPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -169,3 +169,4 @@ class BNBCustonPainter extends CustomPainter {
   @override
   bool shouldRebuildSemantics(BNBCustonPainter oldDelegate) => false;
 }
+ */
