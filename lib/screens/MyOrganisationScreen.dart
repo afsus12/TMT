@@ -13,6 +13,7 @@ class MyOrganisationScreen extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     GlobalController global = Get.find<GlobalController>();
+    Get.put(MyOrganisationController(global));
     MyOrganisationController controller = Get.find<MyOrganisationController>();
     return global.devType.value == "tablet"
         ? Padding(

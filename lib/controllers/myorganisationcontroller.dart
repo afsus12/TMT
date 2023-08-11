@@ -79,10 +79,10 @@ class MyOrganisationController extends GetxController {
   @override
   void onInit() async {
     var connected = await context.connected();
+    print("conntected" + connected.toString());
 
-    if (connected == 2) {
-      await getUserOrg();
-    } else if (connected == 0) {
+    await getUserOrg();
+    if (connected == 0) {
       Get.snackbar(
         '',
         '',

@@ -5,6 +5,7 @@ class Imputation {
   String phase;
   String tache;
   double hours;
+  bool isValidated;
 
   Imputation(
       {this.id,
@@ -12,5 +13,6 @@ class Imputation {
       required this.projet,
       required this.phase,
       required this.tache,
-      required this.hours});
+      required this.hours,
+      required this.isValidated});
 }

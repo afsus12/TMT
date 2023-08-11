@@ -53,6 +53,7 @@ class _SplashPageState extends State<SplashPage> {
       if (connected == 1) {
         await Get.putAsync<Menucontroller>(() async => Menucontroller(),
             permanent: true);
+        GlobalController globalController = Get.find<GlobalController>();
         Get.offAll(MenuScreen());
       } else if (connected == 2) {
         await Get.putAsync<Menucontroller>(() async => Menucontroller(),

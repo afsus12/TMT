@@ -157,7 +157,8 @@ class HomePageController extends GetxController {
               projet: element["projectname"],
               phase: element["projectlots"],
               tache: element["projecttasks"],
-              hours: double.parse(element["tsvalue"].toString()));
+              hours: double.parse(element["tsvalue"].toString()),
+              isValidated: element["isvalidated"]);
 
           imputationlist.add(a);
         }
@@ -186,7 +187,8 @@ class HomePageController extends GetxController {
               projet: element["projectname"],
               phase: element["projectlots"],
               tache: element["projecttasks"],
-              hours: double.parse(element["tsvalue"].toString()));
+              hours: double.parse(element["tsvalue"].toString()),
+              isValidated: element["isvalidated"]);
 
           imputationlist.add(a);
         }
