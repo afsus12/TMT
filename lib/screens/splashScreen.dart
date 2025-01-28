@@ -47,44 +47,7 @@ class _SplashPageState extends State<SplashPage> {
       });
     });
 
-    Future.delayed(Duration(seconds: 5), () async {
-      var connected = await _services.connected();
-      print(connected);
-      if (connected == 1) {
-        await Get.putAsync<Menucontroller>(() async => Menucontroller(),
-            permanent: true);
-        GlobalController globalController = Get.find<GlobalController>();
-        Get.offAll(MenuScreen());
-      } else if (connected == 2) {
-        await Get.putAsync<Menucontroller>(() async => Menucontroller(),
-            permanent: true);
-        Menucontroller menuController = Get.find<Menucontroller>();
-        menuController.screenindex.value = 1;
-
-        Get.offAll(MenuScreen());
-      } else {
-        Get.snackbar(
-          '',
-          '',
-          titleText: BigText(
-            text: "Oops! It seems like you've lost connection to the server",
-            size: 18,
-            color: Colors.green,
-          ),
-          messageText: Text(
-            "consider logging in again to re-establish your connection.",
-            style: TextStyle(
-              fontSize: 17,
-            ),
-          ),
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: MyColors.BordersGrey.withOpacity(0.4),
-          duration: const Duration(seconds: 1),
-          overlayBlur: 0.7,
-        );
-        Get.offAll(LandingScreen());
-      }
-    });
+   checkConnectionAndNavigate();
   }
 
   @override
@@ -94,6 +57,58 @@ class _SplashPageState extends State<SplashPage> {
       _controller.dispose();
     }
   }
+Future<void> checkConnectionAndNavigate() async {
+  // Wait for 5 seconds before executing the connection check
+  await Future.delayed(Duration(seconds: 5));
+
+  // Check the connection status
+  var connected = await _services.connected();
+  print(connected);
+
+  if (connected == 1) {
+    // User is connected with a valid organization
+    await Get.putAsync<Menucontroller>(() async => Menucontroller(),
+        permanent: true);
+    Get.offAll(MenuScreen());
+  } else if (connected == 2) {
+    // User is connected but lacks a valid organization
+    await Get.putAsync<Menucontroller>(() async => Menucontroller(),
+        permanent: true);
+    Menucontroller menuController = Get.find<Menucontroller>();
+    menuController.screenindex.value = 1;
+
+    // Transition to the Menu Screen
+    Get.offAll(MenuScreen());
+  } else {
+    // Display an error message if not connected
+    _showConnectionError();
+  }
+}
+
+void _showConnectionError() {
+  Get.snackbar(
+    '',
+    '',
+    titleText: BigText(
+      text: "Oops! It seems like you've lost connection to the server",
+      size: 18,
+      color: Colors.green,
+    ),
+    messageText: Text(
+      "Consider logging in again to re-establish your connection.",
+      style: TextStyle(
+        fontSize: 17,
+      ),
+    ),
+    snackPosition: SnackPosition.BOTTOM,
+    backgroundColor: MyColors.BordersGrey.withOpacity(0.4),
+    duration: const Duration(seconds: 3), // Increased duration for visibility
+    overlayBlur: 0.7,
+  );
+  
+  // Transition to the Landing Screen
+  Get.offAll(LandingScreen());
+}
 
   _getVideoBackground(globalController) {
     return AspectRatio(

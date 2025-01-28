@@ -46,6 +46,7 @@ class SignInController extends GetxController {
       global.appuser.value.token = temp["token"];
       global.appuser.value.isvalidated = true;
       global.appuser.value.guid = temp["guid"];
+      print(temp);
       print(global.appuser.value.email);
       print(global.appuser.value.token);
       final storage = new FlutterSecureStorage();
@@ -64,7 +65,7 @@ class SignInController extends GetxController {
       return 2;
     } else {
       loading.value = false;
-
+     print(response.body );
       showError.value = true;
       errormsg.value = response.body.toString();
       return 0;

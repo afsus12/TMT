@@ -11,6 +11,7 @@ import 'package:tmt_mobile/utils/utils.dart';
 import 'dart:io';
 
 void main() async {
+  //ignore SSL Certificatee
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   if (getDeviceType() == "tablet") {
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
     Get.put(GlobalController());
 
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
         title: 'Tmt Software',
         theme: ThemeData(
           // This is the theme of your application.
